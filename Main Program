@@ -1,0 +1,79 @@
+import java.util.Scanner;
+
+class Color {
+    public static final String RESET  = "\u001B[0m";
+    public static final String BLACK  = "\033[0;30m";   // BLACK
+    public static final String RED    = "\033[0;31m";     // RED
+    public static final String GREEN  = "\033[0;32m";   // GREEN
+    public static final String YELLOW = "\033[0;33m";  // YELLOW
+    public static final String BLUE   = "\033[0;34m";    // BLUE
+    public static final String PURPLE = "\033[0;35m";  // PURPLE
+    public static final String CYAN   = "\033[0;36m";    // CYAN
+}
+
+//Parent Class of Both Bots which will inherit its variables which will be used later
+class Bot{
+    String name;
+    int health;
+    int minDmg;
+    int maxDmg;
+    double critChance;
+    double dodgeChance;
+    double missChance;
+
+    Bot(){
+        this.name = "";
+        this.health = 0;
+        this.minDmg =0;
+        this.maxDmg = 0;
+        this.critChance = 0.2;
+        this.dodgeChance = 0.2;
+        this.missChance = 0.2;
+    }
+}
+
+//Player Bot which details are edited by the user itself. Its variables are inherited from the Bot class
+//But only the name and health are needed for its details everything else are constants.
+class PlayerBot extends Bot{
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setHealth(int health){
+        this.health = health;
+    }
+}
+
+//Enemy Bot which details are edited by the user itself. Its variables are inherited from the Bot class
+//But only the name and health are needed for its details everything else are constants.
+class EnemyBot extends Bot{
+    public void setName(String name){
+        this.name = name;
+    }
+
+    public void setHealth(int health){
+        this.health = health;
+    }
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        PlayerBot playerBot = new PlayerBot();
+        EnemyBot enemyBot = new EnemyBot();
+
+        int choice;
+        System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+        System.out.println(Color.YELLOW + "|       War of the Bots       |" + Color.RESET);
+        System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+        System.out.println(Color.PURPLE + "|        1. Start Game        |" + Color.RESET);
+        System.out.println(Color.PURPLE + "|        2. Exit Game         |" + Color.RESET);
+        System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+        System.out.println(Color.RED    + "       What Shall It Be?       " + Color.RESET);
+        System.out.print(Color.RED      +"            > " + Color.RESET);
+        choice = scanner.nextInt();
+        System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+        System.out.println(choice);
+
+    }
+}
