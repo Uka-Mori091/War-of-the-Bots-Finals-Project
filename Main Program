@@ -70,14 +70,14 @@ public class Main {
         //To play again? Or to end the game.
         do{
             //Our Main Menu, prompting the user to start the game or exit the game
-            System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
-            System.out.println(Color.YELLOW + "|       War of the Bots       |" + Color.RESET);
-            System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
-            System.out.println(Color.PURPLE + "|        1. Start Game        |" + Color.RESET);
-            System.out.println(Color.PURPLE + "|        2. Exit Game         |" + Color.RESET);
-            System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
-            System.out.println(Color.RED    + "       What Shall It Be?       " + Color.RESET);
-            System.out.print(Color.RED      +"            > " + Color.RESET);
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            System.out.println(Color.YELLOW + "|          War of the Bots          |" + Color.RESET);
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            System.out.println(Color.PURPLE + "|           1. Start Game           |" + Color.RESET);
+            System.out.println(Color.PURPLE + "|           2. Exit Game            |" + Color.RESET);
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            System.out.println(Color.RED    + "          What Shall It Be?         " + Color.RESET);
+            System.out.print(Color.RED      +"              > " + Color.RESET);
             choice = scanner.nextInt();
             scanner.nextLine();
 
@@ -85,27 +85,46 @@ public class Main {
             switch(choice){
                 //Our Game when user wants to start the game
                 case 1:
-                    System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
-                    System.out.println(Color.RED    + "    What Shall Be Your Name?   " + Color.RESET);
-                    System.out.print(Color.RED      +"           > " + Color.RESET);
+                    //User Bot Details
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    System.out.println(Color.YELLOW + "       What Shall Be Your Name?      " + Color.RESET);
+                    System.out.print(Color.RED      +"              > " + Color.RESET);
                     playerBot.setName(scanner.nextLine());
-                    System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    System.out.println(Color.GREEN  + "      What Shall Be Your Health?     " + Color.RESET);
+                    System.out.print(Color.RED      +"              >  " + Color.RESET);
+                    playerBot.setHealth(scanner.nextInt());
+                    scanner.nextLine();
+
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+
+                    //Enemy Bot Details
+                    System.out.println(Color.YELLOW + "  What Shall Be Your Enemy's Name?   " + Color.RESET);
+                    System.out.print(Color.RED      + "              > " + Color.RESET);
+                    enemyBot.setName(scanner.nextLine());
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    System.out.println(Color.GREEN  + "  What Shall Be Your Enemy's Health?  " + Color.RESET);
+                    System.out.print(Color.RED      + "              > " + Color.RESET);
+                    enemyBot.setHealth(scanner.nextInt());
+                    scanner.nextLine();
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+
 
                 //Ending Message before the user exits the game
                 case 2:
-                    System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
-                    System.out.println(Color.YELLOW + "|    Thank You For Playing    |" + Color.RESET);
-                    System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    System.out.println(Color.YELLOW + "|        Thank You For Playing      |" + Color.RESET);
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     break;
 
                 //Error Message, choice = 1 so that the menu is prompted again after being
                 //Evaluated by the do-while loop
                 default:
-                    System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
-                    System.out.println(Color.YELLOW + "|        Invalid Input        |" + Color.RESET);
-                    System.out.println(Color.CYAN   + "|=============================|" + Color.RESET);
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    System.out.println(Color.YELLOW + "|            Invalid Input          |" + Color.RESET);
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     choice = 1;
             }
-        }while(choice!=2);;
+        }while(choice!=2);
     }
 }
