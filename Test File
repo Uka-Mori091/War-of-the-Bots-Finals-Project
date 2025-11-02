@@ -1,1 +1,21 @@
 //Put all of your test code here, SRP will evaluate them before putting it in the main program. Sankyuu!!
+
+//pagka buhay pa
+boolean isAlive(){
+        return health > 0;
+    } 
+
+// ito sa attack. yung wonRPS (rock paper scissors yan) so if nanalo wonRPS magkaka damage and 
+//yung damage niya random tas mag dadamage siya depending don sa range na isset natin na damage so if 20-30 ganon magiging damage niya
+int attack(boolean wonRPS, boolean tie){
+        Random rand = new Random();
+        int damage = rand.nextInt(maxDmg - minDmg + 1) + minDmg;
+    }
+
+// ito naman sa crit damage
+if (rand.nextDouble() < critChance) {
+            damage *= 1.2;
+            System.out.println(name + " lands a CRITICAL HIT!");
+        }
+        
+        return damage;
