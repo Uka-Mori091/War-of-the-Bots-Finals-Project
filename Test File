@@ -19,3 +19,9 @@ if (rand.nextDouble() < critChance) {
         }
         
         return damage;
+
+//dodgeChance
+if (rand.nextDouble() < dodgeChance) {
+    System.out.println(name + " dodged the attack!");
+    return;
+}
