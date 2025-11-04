@@ -1,4 +1,4 @@
-import java.util.*; //Kasama na dito yung random class
+import java.util.*;
 
 //Custom Java Color Code
 //Specifically to add variability to our chatbox or dialogue boxes.
@@ -19,78 +19,132 @@ class Bot{
     int health;
     int minDmg;
     int maxDmg;
-    double critChance;
-    double dodgeChance;
-    double missChance;
 
-    Bot(){
-        this.name        = "";
-        this.health      = 400;
-        this.minDmg      = 5;
-        this.maxDmg      = 20;
-        this.critChance  = 0.4;
-        this.dodgeChance = 0.2;
-        this.missChance  = 0.2;
+    Bot(String name, int health, int minDmg, int maxDmg){
+        this.name        = name;
+        this.health      = health;
+        this.minDmg      = minDmg;
+        this.maxDmg      = maxDmg;
     }
 }
 
+//Player Bot Classes
+class Warrior extends Bot{
+    Warrior(String name){
+        super(name, 100, 5, 20);
+    }
+}
+
+class Tank extends Bot{
+    Tank(String name){
+        super(name, 300, 5, 10);
+    }
+}
+
+class Assassin extends Bot{
+    Assassin(String name){
+        super(name, 80, 15, 20);
+    }
+}
+
+class Mage extends Bot{
+    Mage(String name){
+        super(name, 80, 25, 40);
+    }
+}
+
+
 //Player Bot which details are edited by the user itself. Its variables are inherited from the Bot class
-//But only the name and health are needed for its details everything else are constants.
 class PlayerBot extends Bot{
+    Bot template;
+
+    PlayerBot(){
+        super("", 0, 0, 0);
+    }
+
     public void setName(String name){
         this.name = name;
     }
 
-    public void setClass(String className){
-        switch(className.toLowerCase()){
-            case "warrior":
-                this.health = 100;
-                this.minDmg = 5;
-                this.maxDmg = 15;   //Dapat random siya per loop, gamitin mo yung random class par [SRP]
-                this.critChance = 0;
-                this.missChance = 0;
+    public void setClass(int classChoice){
+        switch(classChoice) {
+            case 1:
+                template = new Warrior(name);
                 break;
 
-            case "tank":
-                this.health = 200;
-                this.minDmg = 5;
-                this.maxDmg = 10;    //Dapat random siya per loop, gamitin mo yung random class par [SRP]
-                this.critChance = 0;
-                this.missChance = 0;
+            case 2:
+                template = new Tank(name);
                 break;
 
-            case "assassin":
-                this.health = 80;
-                this.minDmg = 15;
-                this.maxDmg = 20;     //Dapat random siya per loop, gamitin mo yung random class par [SRP]
-                this.critChance = 0;  //calculate mo per loop par [SRP]
-                this.missChance = 0;
+            case 3:
+                template = new Assassin(name);
                 break;
 
-            case "mage":
-                this.health = 80;
-                this.minDmg = 25;
-                this.maxDmg = 40;      //Dapat random siya per loop, gamitin mo yung random class par [SRP]
-                this.critChance = 0;   //calculate mo per loop par [SRP]
-                this.missChance = 0;
+            case 4:
+                template = new Mage(name);
                 break;
         }
+        this.health = template.health;
+        this.minDmg = template.minDmg;
+        this.maxDmg = template.maxDmg;
+    }
+}
+
+//Enemy Boss Types
+class Shaun extends Bot{
+    Shaun(){
+        super("Shaun", 1000, 50, 100);
+    }
+
+}
+
+class Genesis extends Bot{
+    Genesis(){
+        super("Genesis", 500, 20, 50);
+    }
+}
+
+class Ancheta extends Bot{
+    Ancheta(){
+        super("Ancheta", 750, 5, 20);
+    }
+}
+
+class Alcantara extends Bot{
+    Alcantara(){
+        super("Alcantara", 300, 5, 10);
     }
 }
 
 //Enemy Bot which details are edited by the user itself. Its variables are inherited from the Bot class
-//But only the name and health are needed for its details everything else are constants.
 class EnemyBot extends Bot{
-    public void setBossType(String bossType){
-        switch(bossType.toLowerCase()){
-            case "Genesis":
+    Bot template;
 
-            case "Shaun":
+    EnemyBot(){
+        super("", 0, 0, 0);
+    }
 
-            case "Ancheta":
+    public void setBossType(int bossType){
+        switch(bossType){
+            case 1:
+                template = new Shaun();
+                break;
 
-            case "Alcantara":
+            case 2:
+                template = new Genesis();
+                break;
+
+            case 3:
+                template = new Ancheta();
+                break;
+
+            case 4:
+                template = new Alcantara();
+                break;
         }
+        this.health = template.health;
+        this.minDmg = template.minDmg;
+        this.maxDmg = template.maxDmg;
     }
 }
 
@@ -119,7 +173,6 @@ public class Main {
 
             //Actions that depends on what choice the user has typed for the input
             switch(choice){
-                //Our Game when user wants to start the game
                 case 1:
                     //User Bot Details
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
@@ -128,28 +181,28 @@ public class Main {
                     playerBot.setName(scanner.nextLine());
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     System.out.println(Color.YELLOW + "|     What Shall Be Your Class?     |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|              Warrior              |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|             Assassin              |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|               Tank                |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|               Mage                |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "| 1.           Warrior              |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "| 2.            Tank                |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "| 3.          Assassin              |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "| 4.            Mage                |" + Color.RESET);
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     System.out.print(Color.RED      + "             > " + Color.RESET);
-                    playerBot.setClass(scanner.nextLine());
+                    playerBot.setClass(scanner.nextInt());
 
                     //Enemy Bot Details
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     System.out.println(Color.YELLOW + "|    Whom Shall Be Your Opponent?   |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|              Shaun                |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|             Genesis               |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|             Ancheta               |" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|            Alcantara              |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "|  1.   Shaun {Head Developer}      |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "|  2. Genesis {Assistant Developer} |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "|  3.    Ancheta {Documentation}    |" + Color.RESET);
+                    System.out.println(Color.PURPLE + "|  4.   Alcantara {Documentation}   |" + Color.RESET);
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     System.out.println(Color.PURPLE + "| Most Difficult from Top to Bottom |" + Color.RESET);
                     System.out.print(Color.RED      + "             > " + Color.RESET);
-                    enemyBot.setBossType(scanner.nextLine());
+                    enemyBot.setBossType(scanner.nextInt());
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
 
-                    //-----------------------Lagay Nalangz Dito Yung Battle Loop-------------------------//
+                    //-----------------------Put Your Prototype Code Here-------------------------//
 
                 //Ending Message before the user exits the game
                 case 2:
