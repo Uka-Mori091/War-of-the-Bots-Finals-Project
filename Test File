@@ -12,7 +12,7 @@ int attack(boolean wonRPS, boolean tie){
         int damage = rand.nextInt(maxDmg - minDmg + 1) + minDmg;
     }
 
-// ito naman sa crit damage
+// ito naman sa crit damage and crit chance
 if (rand.nextDouble() < critChance) {
             damage *= 1.2;
             System.out.println(name + " lands a CRITICAL HIT!");
