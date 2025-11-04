@@ -19,12 +19,18 @@ class Bot{
     int health;
     int minDmg;
     int maxDmg;
+    double critChance;
+    double dodgeChance; //inedit ko SRP ah (gen)
+    double missChance;
 
     Bot(String name, int health, int minDmg, int maxDmg){
         this.name        = name;
         this.health      = health;
         this.minDmg      = minDmg;
         this.maxDmg      = maxDmg;
+        this.critChance = critChance;
+        this.dodgeChance = dodgeChance; //inedit ko SRP ah (gen)
+        this.missChance = missChance;
     }
 }
 
