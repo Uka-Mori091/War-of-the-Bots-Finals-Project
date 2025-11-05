@@ -37,25 +37,25 @@ class Bot{
 //Player Bot Classes
 class Warrior extends Bot{
     Warrior(String name){
-        super(name, 100, 5, 20);
+        super(name, 220, 30, 45, 0.20, 0.15, 0.06); // name | health | damage range 30-45 | critchance | dodgechance | misschance
     }
 }
 
 class Tank extends Bot{
     Tank(String name){
-        super(name, 300, 5, 10);
+        super(name, 300, 20, 35, 0.10, 0.15, 0.05);
     }
 }
 
 class Assassin extends Bot{
     Assassin(String name){
-        super(name, 80, 15, 20);
+        super(name, 150, 35, 50, 0.40, 0.20, 0.08);
     }
 }
 
 class Mage extends Bot{
     Mage(String name){
-        super(name, 80, 25, 40);
+        super(name, 180, 45, 70, 0.25, 0.10, 0.10);
     }
 }
 
