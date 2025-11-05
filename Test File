@@ -25,3 +25,10 @@ if (rand.nextDouble() < dodgeChance) {
     System.out.println(name + " dodged the attack!");
     return;
 }
+
+//eto pa pala sa misschance
+    if (rand.nextDouble() < missChance) {
+        System.out.println(name + " missed the attack!");
+        return 0;
+    }
+
