@@ -32,3 +32,48 @@ if (rand.nextDouble() < dodgeChance) {
         return 0;
     }
 
+//New code natenz genisus
+import java.util.*;
+
+class simBot{
+    public static void main(String[] args){
+        Random random = new Random();
+        Scanner scanner = new Scanner(System.in);
+        double damage = 10;
+
+        System.out.println("Enter A Choice [1||2]");
+        int choice = scanner.nextInt();
+        do{
+            double[] chance = {0.2, 0.5, 0.8, 1};
+            int event = Arrays.binarySearch(chance, random.nextDouble()); //-(insertion point) -1
+            if(event < 0) event = -event -1;
+            switch(event){
+                case 1:
+                    System.out.println("You Have Entered In My Domain");
+                    System.out.println(event);
+                    break;
+                case 2:
+                    System.out.println("Hello MOrtal");
+                    System.out.println(event);
+                    break;
+            }
+
+
+            double num = random.nextDouble(0, 1);
+            double dodge = random.nextDouble(0, 1);
+
+            if(num > 0 && num <= 0.2) System.out.println("CRITICAL DAMAGE" + (damage *= 1.2));
+            else System.out.println("NORMAL DAMAGE" + damage);
+
+            if(dodge > 0 && dodge <= 0.3) System.out.println("DODGED");
+            else System.out.println("YOU HAVE FAILED TO DODGE");
+
+            System.out.println(num);
+            System.out.println(dodge);
+
+            System.out.println("Enter A Choice [1||2]");
+            choice = scanner.nextInt();
+
+        }while(choice!=2);
+    }
+}
