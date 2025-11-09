@@ -1,1 +1,184 @@
 //Protoype main program before maging main program, evaluate at optimize ko yung mga binago. S
+
+
+import java.util.*;
+
+class Color {
+    public static final String RESET  = "\u001B[0m";
+    public static final String BLACK  = "\033[0;30m";
+    public static final String RED    = "\033[0;31m";
+    public static final String GREEN  = "\033[0;32m";
+    public static final String YELLOW = "\033[0;33m";
+    public static final String BLUE   = "\033[0;34m";
+    public static final String PURPLE = "\033[0;35m";
+    public static final String CYAN   = "\033[0;36m";
+}
+
+public class Main {
+    public static void main(String[] args) {
+        Scanner scanner = new Scanner(System.in);
+        int choice;
+
+        do {
+            System.out.println(Color.CYAN + "|===================================|" + Color.RESET);
+            System.out.println(Color.YELLOW + "|          War of the Bots          |" + Color.RESET);
+            System.out.println(Color.CYAN + "|===================================|" + Color.RESET);
+            System.out.println(Color.PURPLE + "|           1. Start Game           |" + Color.RESET);
+            System.out.println(Color.PURPLE + "|           2. Exit Game            |" + Color.RESET);
+            System.out.println(Color.CYAN + "|===================================|" + Color.RESET);
+            System.out.print(Color.RED + "> " + Color.RESET);
+            choice = scanner.nextInt();
+            scanner.nextLine();
+
+            switch (choice) {
+                case 1:
+                    System.out.print("Enter your bot's name: ");
+                    String botName = scanner.nextLine();
+
+                    System.out.println("Choose your class:");
+                    System.out.println("1. Tank");
+                    System.out.println("2. Assassin");
+                    System.out.println("3. Mage");
+                    System.out.println("4. Warrior");
+                    int classChoice = scanner.nextInt();
+                    scanner.nextLine();
+
+                    Bot userBot;
+                    switch (classChoice) {
+                        case 1:
+                            userBot = new Bot(botName, 300, 25, 40, 0.15, 0.10);
+                            break;
+                        case 2:
+                            userBot = new Bot(botName, 150, 35, 50, 0.40, 0.15);
+                            break;
+                        case 3:
+                            userBot = new Bot(botName, 150, 45, 70, 0.25, 0.10);
+                            break;
+                        case 4:
+                            userBot = new Bot(botName, 200, 40, 50, 0.25, 0.25);
+                            break;
+                        default:
+                            userBot = new Bot(botName, 200, 40, 50, 0.25, 0.25);
+                    }
+
+                    System.out.println("Choose your opponent: Shaun, Genesis, Ancheta, Alcantara");
+                    String bossName = scanner.nextLine();
+                    
+                    EnemyBot enemyBot;
+                    switch (bossName.toLowerCase()) {
+                    case "shaun":
+                    enemyBot = new EnemyBot("Shaun", 1200, 50, 70, 0.20, 0.10);
+                    break;
+                    case "genesis":
+                    enemyBot = new EnemyBot("Genesis", 600, 80, 120, 0.40, 0.05);
+                    break;
+                    case "ancheta":
+                    enemyBot = new EnemyBot("Ancheta", 1500, 20, 35, 0.10, 0.15);
+                    break;
+                    case "alcantara":
+                    enemyBot = new EnemyBot("Alcantara", 1000, 40, 60, 0.25, 0.10);
+                    break;
+                    default:
+                    enemyBot = new EnemyBot("Default Boss", 1000, 40, 60, 0.25, 0.10);
+}
+
+                    System.out.println("\nBattle Start!");
+
+                    while (userBot.isAlive() && enemyBot.isAlive()) {
+                        System.out.println("\nChoose your move: Rock / Paper / Scissors");
+                        String userMove = scanner.next().toLowerCase();
+                        String[] moves = {"rock", "paper", "scissors"};
+                        String enemyMove = moves[new Random().nextInt(moves.length)];
+                        System.out.println("Enemy chose: " + enemyMove);
+
+                        boolean tie = userMove.equals(enemyMove);
+                        boolean userWins = (userMove.equals("rock") && enemyMove.equals("scissors")) ||
+                                           (userMove.equals("paper") && enemyMove.equals("rock")) ||
+                                           (userMove.equals("scissors") && enemyMove.equals("paper"));
+                        boolean enemyWins = !tie && !userWins;
+
+                        if (tie) {
+                            System.out.println("It's a tie! No damage this round.");
+                        } else if (userWins) {
+                            System.out.println(userBot.name + " wins this round!");
+                            enemyBot.takeDamage(userBot.attack());
+                        } else if (enemyWins) {
+                            System.out.println(enemyBot.name + " wins this round!");
+                            userBot.takeDamage(enemyBot.attack());
+                        }
+                    }
+
+                    if (userBot.isAlive()) {
+                        System.out.println("\n" + userBot.name + " wins the battle!");
+                    } else {
+                        System.out.println("\n" + userBot.name + " loses the battle!");
+                    }
+                    break;
+
+                case 2:
+                    System.out.println("Thank you for playing!");
+                    break;
+
+                default:
+                    System.out.println("Invalid input! Try again.");
+            }
+        } while (choice != 2);
+    }
+}
+
+class Bot {
+    String name;
+    int health;
+    int minDmg;
+    int maxDmg;
+    double critChance;
+    double dodgeChance;
+    double missChance;
+
+    Bot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance) {
+        this.name = name;
+        this.health = health;
+        this.minDmg = minDmg;
+        this.maxDmg = maxDmg;
+        this.critChance = critChance;
+        this.dodgeChance = dodgeChance;
+        this.missChance = 0.05;
+    }
+
+    boolean isAlive() {
+        return health > 0;
+    }
+
+    int attack() {
+        Random rand = new Random();
+        if (rand.nextDouble() < missChance) {
+            System.out.println(name + " missed the attack!");
+            return 0;
+        }
+        int damage = rand.nextInt(maxDmg - minDmg + 1) + minDmg;
+        if (rand.nextDouble() < critChance) {
+            damage *= 1.2;
+            System.out.println(name + " lands a CRITICAL HIT!");
+        }
+        return damage;
+    }
+
+    void takeDamage(int damage) {
+        if (damage == 0) return;
+        Random rand = new Random();
+        if (rand.nextDouble() < dodgeChance) {
+            System.out.println(name + " dodged the attack!");
+            return;
+        }
+        health -= damage;
+        System.out.println(name + " takes " + damage + " damage. Health: " + health);
+    }
+}
+
+    class EnemyBot extends Bot {
+        EnemyBot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance) {
+            super(name, health, minDmg, maxDmg, critChance, dodgeChance);
+    }
+}
+
+
