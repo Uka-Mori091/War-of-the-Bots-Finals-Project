@@ -5,12 +5,12 @@ import java.util.*;
 class Color {
     public static final String RESET  = "\u001B[0m";
     public static final String BLACK  = "\033[0;30m";   // BLACK
-    public static final String RED    = "\033[0;31m";     // RED
+    public static final String RED    = "\033[0;31m";   // RED
     public static final String GREEN  = "\033[0;32m";   // GREEN
-    public static final String YELLOW = "\033[0;33m";  // YELLOW
-    public static final String BLUE   = "\033[0;34m";    // BLUE
-    public static final String PURPLE = "\033[0;35m";  // PURPLE
-    public static final String CYAN   = "\033[0;36m";    // CYAN
+    public static final String YELLOW = "\033[0;33m";   // YELLOW
+    public static final String BLUE   = "\033[0;34m";   // BLUE
+    public static final String PURPLE = "\033[0;35m";   // PURPLE
+    public static final String CYAN   = "\033[0;36m";   // CYAN
 }
 
 //Parent Class of Both Bots which will inherit its variables which will be used later
@@ -20,42 +20,45 @@ class Bot{
     int minDmg;
     int maxDmg;
     double critChance;
-    double dodgeChance; //inedit ko SRP ah (gen)
+    double dodgeChance;
     double missChance;
+    public static double[] chance = {0.2, 0.5, 0.8, 1};
+    public static Random random = new Random();
 
-    Bot(String name, int health, int minDmg, int maxDmg){
+    Bot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance, double missChance){
         this.name        = name;
         this.health      = health;
         this.minDmg      = minDmg;
         this.maxDmg      = maxDmg;
-        this.critChance = critChance;
-        this.dodgeChance = dodgeChance; //inedit ko SRP ah (gen)
-        this.missChance = missChance;
+        this.critChance  = critChance;
+        this.dodgeChance = dodgeChance;
+        this.missChance  = missChance;
     }
 }
+
 
 //Player Bot Classes
 class Warrior extends Bot{
     Warrior(String name){
-        super(name, 220, 30, 45, 0.20, 0.15, 0.06); //name | health | damage range 30-45 | critchance | dodgechance | misschance
+        super(name, 100, 5, 20, 0.20, 0.15, 0.06);
     }
 }
 
 class Tank extends Bot{
     Tank(String name){
-        super(name, 300, 20, 35, 0.10, 0.15, 0.05);
+        super(name, 300, 5, 10, 0.10, 0.15, 0.05);
     }
 }
 
 class Assassin extends Bot{
     Assassin(String name){
-        super(name, 150, 35, 50, 0.40, 0.20, 0.08);
+        super(name, 80, 15, 20, 0.40, 0.20, 0.08);
     }
 }
 
 class Mage extends Bot{
     Mage(String name){
-        super(name, 180, 45, 70, 0.25, 0.10, 0.10);
+        super(name, 80, 25, 40, 0.25, 0.10, 0.10);
     }
 }
 
@@ -65,7 +68,7 @@ class PlayerBot extends Bot{
     Bot template;
 
     PlayerBot(){
-        super("", 0, 0, 0);
+        super("", 0, 0, 0, 0, 0, 0);
     }
 
     public void setName(String name){
@@ -98,27 +101,24 @@ class PlayerBot extends Bot{
 
 //Enemy Boss Types
 class Shaun extends Bot{
-    Shaun(){
-        super("Shaun", 1000, 50, 100);
-    }
-
+    Shaun(){super("Shaun", 1000, 50, 100, 0, 0, 0);}
 }
 
 class Genesis extends Bot{
     Genesis(){
-        super("Genesis", 500, 20, 50);
+        super("Genesis", 500, 20, 50, 0, 0, 0);
     }
 }
 
 class Ancheta extends Bot{
     Ancheta(){
-        super("Ancheta", 750, 5, 20);
+        super("Ancheta", 750, 5, 20, 0, 0, 0);
     }
 }
 
 class Alcantara extends Bot{
     Alcantara(){
-        super("Alcantara", 300, 5, 10);
+        super("Alcantara", 300, 5, 10, 0, 0, 0);
     }
 }
 
@@ -127,7 +127,7 @@ class EnemyBot extends Bot{
     Bot template;
 
     EnemyBot(){
-        super("", 0, 0, 0);
+        super("", 0, 0, 0, 0, 0, 0);
     }
 
     public void setBossType(int bossType){
@@ -148,9 +148,67 @@ class EnemyBot extends Bot{
                 template = new Alcantara();
                 break;
         }
-        this.health = template.health;
-        this.minDmg = template.minDmg;
-        this.maxDmg = template.maxDmg;
+        this.health      = template.health;
+        this.minDmg      = template.minDmg;
+        this.maxDmg      = template.maxDmg;
+        this.critChance  = template.critChance;
+        this.dodgeChance = template.dodgeChance;
+        this.missChance  = template.missChance;
+    }
+}
+
+class EnemyCombat extends EnemyBot {
+    private static final String[] dialogue = {"You Have Entered In My Domain", "Hello MOrtal", "Oh Hello Nyavi", "HEHEHE DEE-"};
+
+    public static int generateDamage(int minDmg, int maxDmg) {
+        return minDmg + random.nextInt(maxDmg - minDmg + 1);
+    }
+
+    public static int applyCritical(int damage, double critChance) {
+        if (random.nextDouble() <= critChance) {
+            System.out.println("CRITICAL HIT!");
+            return damage * 2; // or any multiplier you prefer
+        }
+        return damage;
+    }
+
+    public static boolean isDodged(double dodgeChance) {
+        return random.nextDouble() <= dodgeChance;
+    }
+
+    public static boolean isMissed(double missChance) {
+        return random.nextDouble() <= missChance;
+    }
+
+    public static void speak() {
+        int speakIndex = Arrays.binarySearch(chance, random.nextDouble());
+        if (speakIndex < 0) speakIndex = -speakIndex - 1;
+        if (speakIndex >= dialogue.length) speakIndex = dialogue.length - 1;
+
+        System.out.println(dialogue[speakIndex]);
+
+    }
+}
+
+class BotCombat extends PlayerBot{
+    public static int generateDamage(int minDmg, int maxDmg) {
+        return minDmg + random.nextInt(maxDmg - minDmg + 1);
+    }
+
+    public static int applyCritical(int damage, double critChance) {
+        if (random.nextDouble() <= critChance) {
+            System.out.println("CRITICAL HIT!");
+            return damage * 2; // or any multiplier you prefer
+        }
+        return damage;
+    }
+
+    public static boolean isDodged(double dodgeChance) {
+        return random.nextDouble() <= dodgeChance;
+    }
+
+    public static boolean isMissed(double missChance) {
+        return random.nextDouble() <= missChance;
     }
 }
 
@@ -161,6 +219,7 @@ public class Main {
         EnemyBot enemyBot = new EnemyBot();
 
         int choice = 0;
+
 
         //Do-while loop for the entire main program so that it still runs after the game ends and prompts the user
         //To play again? Or to end the game.
@@ -207,8 +266,12 @@ public class Main {
                     System.out.print(Color.RED      + "             > " + Color.RESET);
                     enemyBot.setBossType(scanner.nextInt());
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    System.out.println(Color.PURPLE + "|         1.   Start Game           |" + Color.RESET);
+                    System.out.print(Color.RED      + "             > " + Color.RESET);
 
-                    //-----------------------Put Your Prototype Code Here-------------------------//
+                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+
+
 
                 //Ending Message before the user exits the game
                 case 2:
