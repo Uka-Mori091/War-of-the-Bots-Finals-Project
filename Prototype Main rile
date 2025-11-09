@@ -1,4 +1,7 @@
-//Protoype main program before maging main program, evaluate at optimize ko yung mga binago. S
+//Protoype main program before maging main program, evaluate at optimize ko yung mga binago. 
+
+// inalis ko na yung mga super kse tingin ko yon yung nagpapahaba pero naglagay ako super sa may enemybot 
+tas ginawa ko lang yung dati kong ginawa na may switch case tas the rest ginaya ko lang sa current code
 
 
 import java.util.*;
