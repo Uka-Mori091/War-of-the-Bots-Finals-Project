@@ -62,7 +62,6 @@ class Mage extends Bot{
     }
 }
 
-
 //Player Bot which details are edited by the user itself. Its variables are inherited from the Bot class
 class PlayerBot extends Bot{
     Bot template;
@@ -158,7 +157,7 @@ class EnemyBot extends Bot{
 }
 
 class EnemyCombat extends EnemyBot {
-    private static final String[] dialogue = {"You Have Entered In My Domain", "Hello MOrtal", "Oh Hello Nyavi", "HEHEHE DEE-"};
+    private static final String[] dialogue = {"Greetings, human", "You're small as your bank account", "You want to go back to the person who left you, don't you?", "Did they even like you?"};
 
     public static int generateDamage(int minDmg, int maxDmg) {
         return minDmg + random.nextInt(maxDmg - minDmg + 1);
@@ -191,6 +190,7 @@ class EnemyCombat extends EnemyBot {
 }
 
 class BotCombat extends PlayerBot{
+    private static final String[] dialogue = {"Maybe I should run", "I will defeat you no matter how long it takes", "I have no idea what im doing", "I will save this world"};
     public static int generateDamage(int minDmg, int maxDmg) {
         return minDmg + random.nextInt(maxDmg - minDmg + 1);
     }
@@ -210,6 +210,14 @@ class BotCombat extends PlayerBot{
     public static boolean isMissed(double missChance) {
         return random.nextDouble() <= missChance;
     }
+
+    public static void speak() {
+        int speakIndex = Arrays.binarySearch(chance, random.nextDouble());
+        if (speakIndex < 0) speakIndex = -speakIndex - 1;
+        if (speakIndex >= dialogue.length) speakIndex = dialogue.length - 1;
+
+        System.out.println(dialogue[speakIndex]);
+    }
 }
 
 public class Main {
@@ -217,10 +225,7 @@ public class Main {
         Scanner scanner = new Scanner(System.in);
         PlayerBot playerBot = new PlayerBot();
         EnemyBot enemyBot = new EnemyBot();
-
         int choice = 0;
-
-
         //Do-while loop for the entire main program so that it still runs after the game ends and prompts the user
         //To play again? Or to end the game.
         do{
