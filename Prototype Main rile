@@ -1,18 +1,13 @@
 //Protoype main program before maging main program, evaluate at optimize ko yung mga binago. 
 
-// inalis ko na yung mga super kse tingin ko yon yung nagpapahaba pero naglagay ako super sa may enemybot 
-tas ginawa ko lang yung dati kong ginawa na may switch case tas the rest ginaya ko lang sa current code
-
+//yan SRP naka super din yung sa player
 
 import java.util.*;
 
 class Color {
     public static final String RESET  = "\u001B[0m";
-    public static final String BLACK  = "\033[0;30m";
     public static final String RED    = "\033[0;31m";
-    public static final String GREEN  = "\033[0;32m";
     public static final String YELLOW = "\033[0;33m";
-    public static final String BLUE   = "\033[0;34m";
     public static final String PURPLE = "\033[0;35m";
     public static final String CYAN   = "\033[0;36m";
 }
@@ -46,47 +41,13 @@ public class Main {
                     int classChoice = scanner.nextInt();
                     scanner.nextLine();
 
-                    Bot userBot;
-                    switch (classChoice) {
-                        case 1:
-                            userBot = new Bot(botName, 300, 25, 40, 0.15, 0.10);
-                            break;
-                        case 2:
-                            userBot = new Bot(botName, 150, 35, 50, 0.40, 0.15);
-                            break;
-                        case 3:
-                            userBot = new Bot(botName, 150, 45, 70, 0.25, 0.10);
-                            break;
-                        case 4:
-                            userBot = new Bot(botName, 200, 40, 50, 0.25, 0.25);
-                            break;
-                        default:
-                            userBot = new Bot(botName, 200, 40, 50, 0.25, 0.25);
-                    }
+                    Bot userBot = createBot(botName, classChoice);
 
                     System.out.println("Choose your opponent: Shaun, Genesis, Ancheta, Alcantara");
                     String bossName = scanner.nextLine();
-                    
-                    EnemyBot enemyBot;
-                    switch (bossName.toLowerCase()) {
-                    case "shaun":
-                    enemyBot = new EnemyBot("Shaun", 1200, 50, 70, 0.20, 0.10);
-                    break;
-                    case "genesis":
-                    enemyBot = new EnemyBot("Genesis", 600, 80, 120, 0.40, 0.05);
-                    break;
-                    case "ancheta":
-                    enemyBot = new EnemyBot("Ancheta", 1500, 20, 35, 0.10, 0.15);
-                    break;
-                    case "alcantara":
-                    enemyBot = new EnemyBot("Alcantara", 1000, 40, 60, 0.25, 0.10);
-                    break;
-                    default:
-                    enemyBot = new EnemyBot("Default Boss", 1000, 40, 60, 0.25, 0.10);
-}
+                    EnemyBot enemyBot = createBoss(bossName);
 
                     System.out.println("\nBattle Start!");
-
                     while (userBot.isAlive() && enemyBot.isAlive()) {
                         System.out.println("\nChoose your move: Rock / Paper / Scissors");
                         String userMove = scanner.next().toLowerCase();
@@ -105,17 +66,14 @@ public class Main {
                         } else if (userWins) {
                             System.out.println(userBot.name + " wins this round!");
                             enemyBot.takeDamage(userBot.attack());
-                        } else if (enemyWins) {
+                        } else {
                             System.out.println(enemyBot.name + " wins this round!");
                             userBot.takeDamage(enemyBot.attack());
                         }
                     }
 
-                    if (userBot.isAlive()) {
-                        System.out.println("\n" + userBot.name + " wins the battle!");
-                    } else {
-                        System.out.println("\n" + userBot.name + " loses the battle!");
-                    }
+                    System.out.println(userBot.isAlive() ? "\n" + userBot.name + " wins the battle!" :
+                                                           "\n" + userBot.name + " loses the battle!");
                     break;
 
                 case 2:
@@ -126,6 +84,23 @@ public class Main {
                     System.out.println("Invalid input! Try again.");
             }
         } while (choice != 2);
+    }
+
+    public static Bot createBot(String name, int choice) {
+        return choice == 1 ? new Tank(name) :
+               choice == 2 ? new Assassin(name) :
+               choice == 3 ? new Mage(name) :
+                             new Warrior(name); // default
+    }
+
+    public static EnemyBot createBoss(String name) {
+        switch (name.toLowerCase()) {
+            case "shaun": return new EnemyBot("Shaun", 1000, 50, 70, 0.20, 0.10, 0.05);
+            case "genesis": return new EnemyBot("Genesis", 600, 80, 120, 0.40, 0.05, 0.10);
+            case "ancheta": return new EnemyBot("Ancheta", 1500, 20, 35, 0.10, 0.15, 0.05);
+            case "alcantara": return new EnemyBot("Alcantara", 1000, 40, 60, 0.25, 0.10, 0.06);
+            default: return new EnemyBot("Default Boss", 1000, 40, 60, 0.25, 0.10, 0.05);
+        }
     }
 }
 
@@ -138,19 +113,17 @@ class Bot {
     double dodgeChance;
     double missChance;
 
-    Bot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance) {
+    Bot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance, double missChance) {
         this.name = name;
         this.health = health;
         this.minDmg = minDmg;
         this.maxDmg = maxDmg;
         this.critChance = critChance;
         this.dodgeChance = dodgeChance;
-        this.missChance = 0.05;
+        this.missChance = missChance;
     }
 
-    boolean isAlive() {
-        return health > 0;
-    }
+    boolean isAlive() { return health > 0; }
 
     int attack() {
         Random rand = new Random();
@@ -178,10 +151,14 @@ class Bot {
     }
 }
 
-    class EnemyBot extends Bot {
-        EnemyBot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance) {
-            super(name, health, minDmg, maxDmg, critChance, dodgeChance);
+class Warrior extends Bot { Warrior(String name) { super(name, 100, 5, 20, 0.20, 0.15, 0.06); } }
+class Tank extends Bot { Tank(String name) { super(name, 300, 5, 10, 0.10, 0.15, 0.05); } }
+class Assassin extends Bot { Assassin(String name) { super(name, 80, 15, 20, 0.40, 0.20, 0.08); } }
+class Mage extends Bot { Mage(String name) { super(name, 80, 25, 40, 0.25, 0.10, 0.10); } }
+
+class EnemyBot extends Bot {
+    EnemyBot(String name, int health, int minDmg, int maxDmg, double critChance, double dodgeChance, double missChance) {
+        super(name, health, minDmg, maxDmg, critChance, dodgeChance, missChance);
     }
 }
-
 
