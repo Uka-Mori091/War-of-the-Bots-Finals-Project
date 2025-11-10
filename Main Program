@@ -77,19 +77,19 @@ class Bot{
 }
 //Player Bot Classes
 class Warrior extends Bot{
-    Warrior(String name){super(name, 100, 5, 20, 0.20, 0.15, 0.06);}
+    Warrior(String name){super(name, 200, 40, 50, 0.25, 0.25, 0.06);}
 }
 
 class Tank extends Bot{
-    Tank(String name){super(name, 300, 5, 10, 0.10, 0.15, 0.05);}
+    Tank(String name){super(name, 300, 25, 40, 0.15, 0.10, 0.05);}
 }
 
 class Assassin extends Bot{
-    Assassin(String name){super(name, 80, 15, 20, 0.40, 0.20, 0.08);}
+    Assassin(String name){super(name, 150, 35, 50, 0.40, 0.15, 0.08);}
 }
 
 class Mage extends Bot{
-    Mage(String name){super(name, 80, 25, 40, 0.25, 0.10, 0.10);}
+    Mage(String name){super(name, 150, 45, 70, 0.25, 0.10, 0.10);}
 }
 
 //Player Bot which details are edited by the user itself. Its variables are inherited from the Bot class
