@@ -1,5 +1,4 @@
 import java.util.*;
-
 //Custom Java Color Code
 //Specifically to add variability to our chatbox or dialogue boxes.
 class Color {
@@ -12,7 +11,6 @@ class Color {
     public static final String PURPLE = "\033[0;35m";   // PURPLE
     public static final String CYAN   = "\033[0;36m";   // CYAN
 }
-
 //Parent Class of Both Bots which will inherit its variables which will be used later
 class Bot{
     String name;
@@ -34,41 +32,70 @@ class Bot{
         this.dodgeChance = dodgeChance;
         this.missChance  = missChance;
     }
+
+    boolean isAlive() {
+        return health > 0;
+    }
+
+    int attack() {
+        if (random.nextDouble() < missChance) {
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            System.out.println(name + " missed the attack!");
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            return 0;
+        }
+        int damage = random.nextInt(maxDmg - minDmg + 1) + minDmg;
+        if (random.nextDouble() < critChance) {
+            damage *= 1.2;
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            System.out.println(name + " lands a CRITICAL HIT!");
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+        }
+        return damage;
+    }
+
+    void takeDamage(int damage) {
+        if (damage == 0) return;
+        Random rand = new Random();
+        if (rand.nextDouble() < dodgeChance) {
+            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+            System.out.println(name + " dodged the attack!");
+            return;
+        }
+        health -= damage;
+        System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+        System.out.println(name + "  |Takes " + damage + " Damage| |Health: " + health + "|");
+        System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+    }
+
+    public void setSpeakIndex(String [] chat){
+        int speakIndex = Arrays.binarySearch(chance, random.nextDouble());
+        if (speakIndex < 0) speakIndex = -speakIndex - 1;
+        if (speakIndex >= chat.length) speakIndex = chat.length - 1;
+        System.out.println(chat[speakIndex]);
+    }
 }
-
-
 //Player Bot Classes
 class Warrior extends Bot{
-    Warrior(String name){
-        super(name, 100, 5, 20, 0.20, 0.15, 0.06);
-    }
+    Warrior(String name){super(name, 100, 5, 20, 0.20, 0.15, 0.06);}
 }
 
 class Tank extends Bot{
-    Tank(String name){
-        super(name, 300, 5, 10, 0.10, 0.15, 0.05);
-    }
+    Tank(String name){super(name, 300, 5, 10, 0.10, 0.15, 0.05);}
 }
 
 class Assassin extends Bot{
-    Assassin(String name){
-        super(name, 80, 15, 20, 0.40, 0.20, 0.08);
-    }
+    Assassin(String name){super(name, 80, 15, 20, 0.40, 0.20, 0.08);}
 }
 
 class Mage extends Bot{
-    Mage(String name){
-        super(name, 80, 25, 40, 0.25, 0.10, 0.10);
-    }
+    Mage(String name){super(name, 80, 25, 40, 0.25, 0.10, 0.10);}
 }
 
 //Player Bot which details are edited by the user itself. Its variables are inherited from the Bot class
 class PlayerBot extends Bot{
     Bot template;
-
-    PlayerBot(){
-        super("", 0, 0, 0, 0, 0, 0);
-    }
+    PlayerBot(){super("", 0, 0, 0, 0, 0, 0);}
 
     public void setName(String name){
         this.name = name;
@@ -76,21 +103,10 @@ class PlayerBot extends Bot{
 
     public void setClass(int classChoice){
         switch(classChoice) {
-            case 1:
-                template = new Warrior(name);
-                break;
-
-            case 2:
-                template = new Tank(name);
-                break;
-
-            case 3:
-                template = new Assassin(name);
-                break;
-
-            case 4:
-                template = new Mage(name);
-                break;
+            case 1: template = new Warrior(name);break;
+            case 2: template = new Tank(name);break;
+            case 3: template = new Assassin(name);break;
+            case 4: template = new Mage(name);break;
         }
         this.health = template.health;
         this.minDmg = template.minDmg;
@@ -104,49 +120,30 @@ class Shaun extends Bot{
 }
 
 class Genesis extends Bot{
-    Genesis(){
-        super("Genesis", 500, 20, 50, 0, 0, 0);
-    }
+    Genesis(){super("Genesis", 500, 20, 50, 0, 0, 0);}
 }
 
 class Ancheta extends Bot{
-    Ancheta(){
-        super("Ancheta", 750, 5, 20, 0, 0, 0);
-    }
+    Ancheta(){super("Ancheta", 200, 5, 20, 0, 0, 0);}
 }
 
 class Alcantara extends Bot{
-    Alcantara(){
-        super("Alcantara", 300, 5, 10, 0, 0, 0);
-    }
+    Alcantara(){super("Alcantara", 200, 5, 10, 0, 0, 0);}
 }
 
 //Enemy Bot which details are edited by the user itself. Its variables are inherited from the Bot class
 class EnemyBot extends Bot{
     Bot template;
-
-    EnemyBot(){
-        super("", 0, 0, 0, 0, 0, 0);
-    }
+    EnemyBot(){super("", 0, 0, 0, 0, 0, 0);}
 
     public void setBossType(int bossType){
         switch(bossType){
-            case 1:
-                template = new Shaun();
-                break;
-
-            case 2:
-                template = new Genesis();
-                break;
-
-            case 3:
-                template = new Ancheta();
-                break;
-
-            case 4:
-                template = new Alcantara();
-                break;
+            case 1: template = new Shaun();     break;
+            case 2: template = new Genesis();   break;
+            case 3: template = new Ancheta();   break;
+            case 4: template = new Alcantara(); break;
         }
+        this.name        = template.name;
         this.health      = template.health;
         this.minDmg      = template.minDmg;
         this.maxDmg      = template.maxDmg;
@@ -156,76 +153,26 @@ class EnemyBot extends Bot{
     }
 }
 
-class EnemyCombat extends EnemyBot {
-    private static final String[] dialogue = {"Greetings, human", "You're small as your bank account", "You want to go back to the person who left you, don't you?", "Did they even like you?"};
-
-    public static int generateDamage(int minDmg, int maxDmg) {
-        return minDmg + random.nextInt(maxDmg - minDmg + 1);
-    }
-
-    public static int applyCritical(int damage, double critChance) {
-        if (random.nextDouble() <= critChance) {
-            System.out.println("CRITICAL HIT!");
-            return damage * 2; // or any multiplier you prefer
-        }
-        return damage;
-    }
-
-    public static boolean isDodged(double dodgeChance) {
-        return random.nextDouble() <= dodgeChance;
-    }
-
-    public static boolean isMissed(double missChance) {
-        return random.nextDouble() <= missChance;
-    }
-
-    public static void speak() {
-        int speakIndex = Arrays.binarySearch(chance, random.nextDouble());
-        if (speakIndex < 0) speakIndex = -speakIndex - 1;
-        if (speakIndex >= dialogue.length) speakIndex = dialogue.length - 1;
-
-        System.out.println(dialogue[speakIndex]);
-
-    }
-}
-
-class BotCombat extends PlayerBot{
-    private static final String[] dialogue = {"Maybe I should run", "I will defeat you no matter how long it takes", "I have no idea what im doing", "I will save this world"};
-    public static int generateDamage(int minDmg, int maxDmg) {
-        return minDmg + random.nextInt(maxDmg - minDmg + 1);
-    }
-
-    public static int applyCritical(int damage, double critChance) {
-        if (random.nextDouble() <= critChance) {
-            System.out.println("CRITICAL HIT!");
-            return damage * 2; // or any multiplier you prefer
-        }
-        return damage;
-    }
-
-    public static boolean isDodged(double dodgeChance) {
-        return random.nextDouble() <= dodgeChance;
-    }
-
-    public static boolean isMissed(double missChance) {
-        return random.nextDouble() <= missChance;
-    }
-
-    public static void speak() {
-        int speakIndex = Arrays.binarySearch(chance, random.nextDouble());
-        if (speakIndex < 0) speakIndex = -speakIndex - 1;
-        if (speakIndex >= dialogue.length) speakIndex = dialogue.length - 1;
-
-        System.out.println(dialogue[speakIndex]);
-    }
-}
-
 public class Main {
     public static void main(String[] args) {
-        Scanner scanner = new Scanner(System.in);
+        Scanner scanner    = new Scanner(System.in);
         PlayerBot playerBot = new PlayerBot();
         EnemyBot enemyBot = new EnemyBot();
         int choice = 0;
+        int gameStart = 0;
+        String[] moves = {"rock", "paper", "scissors"};
+        String[] userDialogue = {"" +
+                " Maybe I should run",
+                " I will defeat you",
+                " I have no idea what im doing",
+                " I will save this world"};
+        String[] enemyDialogue = {
+                " Greetings, human",
+                " You're small as your bank account",
+                " You want to go back don't you?",
+                " Did they even like you?"};
+
+
         //Do-while loop for the entire main program so that it still runs after the game ends and prompts the user
         //To play again? Or to end the game.
         do{
@@ -271,22 +218,46 @@ public class Main {
                     System.out.print(Color.RED      + "             > " + Color.RESET);
                     enemyBot.setBossType(scanner.nextInt());
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
-                    System.out.println(Color.PURPLE + "|         1.   Start Game           |" + Color.RESET);
-                    System.out.print(Color.RED      + "             > " + Color.RESET);
-
+                    System.out.println(Color.PURPLE + "|          Battle Start!!           |" + Color.RESET);
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                    while(playerBot.isAlive() && enemyBot.isAlive()){
+                        System.out.println(Color.PURPLE + "|      Rock | Paper | Scissors      |" + Color.RESET);
+                        System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                        System.out.print(Color.RED      +"             > " + Color.RESET);
+                        String userMove = scanner.next().toLowerCase();
+                        String enemyMove = moves[new Random().nextInt(moves.length)];
 
+                        boolean tie = userMove.equals(enemyMove);
+                        boolean userWins = (userMove.equals("rock") && enemyMove.equals("scissors")) ||
+                                (userMove.equals("paper") && enemyMove.equals("rock")) ||
+                                (userMove.equals("scissors") && enemyMove.equals("paper"));
+                        boolean enemyWins = !tie && !userWins;
 
-
+                        if (tie) {
+                            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                            System.out.println(Color.RED + "|  Both Blocked the Incoming Damage |" + Color.RESET);
+                        } else if (userWins) {
+                            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                            System.out.print(playerBot.name + ":");
+                            playerBot.setSpeakIndex(userDialogue);
+                            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                            System.out.println(Color.RED    + "|        " + playerBot.name + " Lands A Strike!!    |" + Color.RESET);
+                            enemyBot.takeDamage(playerBot.attack());
+                        } else if (enemyWins) {
+                            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                            System.out.print(enemyBot.name + ":");
+                            enemyBot.setSpeakIndex(enemyDialogue);
+                            System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
+                            System.out.println(Color.RED    + "|      " + enemyBot.name + " Lands A Strike!!      |" + Color.RESET);
+                            playerBot.takeDamage(enemyBot.attack());
+                        }
+                    }
                 //Ending Message before the user exits the game
                 case 2:
-                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     System.out.println(Color.YELLOW + "|        Thank You For Playing      |" + Color.RESET);
-                    System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     break;
 
                 //Error Message, choice = 1 so that the menu is prompted again after being
-                //Evaluated by the do-while loop
                 default:
                     System.out.println(Color.CYAN   + "|===================================|" + Color.RESET);
                     System.out.println(Color.YELLOW + "|            Invalid Input          |" + Color.RESET);
